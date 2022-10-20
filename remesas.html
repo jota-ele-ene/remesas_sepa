@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<!-- saved from url=(0053)http://demo.webslesson.info/excel-to-html-javascript/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+	<title>Crear archivos de remesas desde excel de Listados</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+
+    <script type="text/javascript" src="./template.js"></script>
+    <script type="text/javascript" src="./config.js"></script>
+	
+	<!-- Include SheetJS Library -->
+    <script type="text/javascript" src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+
+	<!-- Include jQuery -->
+	<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+	<!-- Include Date Range Picker -->
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
+	
+</head>
+<body>
+    <div class="container">
+
+		<div class="row">
+			<h2 class="text-center mt-4 mb-4">Crear archivos de remesas desde excel de Listados</h2>
+        </div>
+
+		<div class="row">
+			<div class="col-md-8 order-md-1">
+			  <form class="needs-validation" novalidate="">
+
+				<div class="row">
+				  <div class="col-md-5 mb-4">
+					<label for="remesa">Nombre de la remesa <span class="text-muted">(e.g. RCUR129)</span></label>
+					<input type="text" class="form-control" id="remesa">
+				  </div>
+				  <div class="col-md-4 mb-4">
+					<label for="fechaCargo">Fecha de cargo</label>
+					<input placeholder="Selecciona fecha" type="text" id="fechaCargo" class="form-control picker__input">
+				  </div>
+				  <div class="col-md-3 mb-4">
+					<span>Tipo de cargo</span>
+					<div class="form-check">
+					  <input class="form-check-input" type="radio" name="tipoCargo" id="rcur" value="RCUR">
+					  <label class="form-check-label" for="rcur">Recurrente</label>
+					</div>
+					<div class="form-check">
+					  <input class="form-check-input" type="radio" name="tipoCargo" id="frst" value="FRST">
+					  <label class="form-check-label" for="frst">Primer cargo</label>
+					</div>
+				  </div>
+				</div>
+
+
+				<div class="row">
+				  <div class="col-md-5 mb-4">
+					<label for="concepto">Concepto</label>
+					<input type="text" class="form-control" id="concepto">
+				  </div>
+				  <div class="col-md-4 mb-4">
+					<label for="cuota">Cuota</label>
+					<input type="text" id="cuota" class="form-control" pattern="\d+(\.\d{2})?"
+>
+				  </div>
+				</div>
+
+
+			  </form>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col">
+				<div class="card">
+					<div class="card-header"><b>Selecciona excel con los datos</b></div>
+					<div class="card-body">
+						
+						<input type="file" id="excel_file">
+
+					</div>
+				</div>
+				<p><a href="file.xlsx">Descarga Excel Ejemplo</a>
+			</div>
+			<div class="col">
+				<div class="card">
+					<div class="card-header"><b>Descarga XML con la remesa</b></div>
+					<div class="card-body">
+						
+						<input type="button" id="btn" value="Download" />
+
+					</div>
+				</div>
+			</div>
+		</div>    
+		
+		<div class="row">
+
+			</p><div id="excel_data" class="mt-5"></div>
+
+		</div>
+
+    </div>
+
+
+<script>
+
+document.getElementById('remesa').addEventListener('change', (event) => {
+
+    document.getElementById('excel_data').innerHTML = '';
+
+	var remesa = event.target.value;
+	
+	var pattern = /[^a-z\d]/i;
+
+	if (remesa.length > 13)
+    {
+        document.getElementById('excel_data').innerHTML = '<div class="alert alert-danger">El nombre de la remesa sólo puede tener 13 caracteres como máximo</div>';
+
+        excel_file.value = '';
+
+        return false;
+    }
+
+	if (pattern.test(remesa))
+    {
+        document.getElementById('excel_data').innerHTML = '<div class="alert alert-danger">El nombre de la remesa sólo puede tener números y letras</div>';
+
+        excel_file.value = '';
+
+        return false;
+    }
+	
+	RemesaID = remesa;
+	
+	MessageID = "PRE" + nowString + remesa.padStart(13, '0').toUpperCase();
+	
+});
+
+document.getElementById('concepto').addEventListener('change', (event) => {
+
+    document.getElementById('excel_data').innerHTML = '';
+
+	SeqConcept = event.target.value;
+
+});
+
+document.getElementById('cuota').addEventListener('change', (event) => {
+
+    document.getElementById('excel_data').innerHTML = '';
+
+	var decimal = parseFloat(event.target.value.replace(/,/g, '.'));
+
+	if (isNaN(decimal))
+    {
+        document.getElementById('excel_data').innerHTML = '<div class="alert alert-danger">La cuota es un importe en euros con dos decimales</div>';
+
+        return false;
+    }
+	
+	if (decimal < 30)
+    {
+        document.getElementById('excel_data').innerHTML = '<div class="alert alert-danger">Revisa el importe de la cuota. Parece demasiado bajo</div>';
+
+        return false;
+    }
+	
+	if (decimal > 60) 
+    {
+        document.getElementById('excel_data').innerHTML = '<div class="alert alert-danger">Revisa el importe de la cuota. Parece demasiado alto</div>';
+
+        return false;
+    }
+
+	SeqAmnt = ""+(Math.floor(parseFloat(decimal.toString(10))* 100) / 100).toFixed(2);
+
+});
+
+const excel_file = document.getElementById('excel_file');
+
+excel_file.addEventListener('change', (event) => {
+
+    document.getElementById('excel_data').innerHTML = '';
+
+    if(!['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel'].includes(event.target.files[0].type))
+    {
+        document.getElementById('excel_data').innerHTML = '<div class="alert alert-danger">Solo se procesan ficheros .xlsx o .xls</div>';
+
+        excel_file.value = '';
+
+        return false;
+    }
+
+    var reader = new FileReader();
+
+    reader.readAsArrayBuffer(event.target.files[0]);
+
+    reader.onload = function(event){
+
+        var data = new Uint8Array(reader.result);
+
+        var work_book = XLSX.read(data, {type:'array'});
+
+        var sheet_name = work_book.SheetNames;
+
+        var sheet_data = XLSX.utils.sheet_to_json(work_book.Sheets[sheet_name[0]], {header:1});
+
+        if(sheet_data.length > 0)
+        {
+            var table_output = '<table class="table table-striped table-bordered">';
+
+            for(var row = 0; row < sheet_data.length; row++)
+            {
+			
+				var thisEntry = {};
+
+                table_output += '<tr>';
+
+                for(var cell = 0; cell < sheet_data[row].length; cell++)
+                {
+
+                    if(row == 0)
+                    {
+
+                        table_output += '<th>'+sheet_data[row][cell]+'</th>';
+						fields[cell] = sheet_data[row][cell];
+
+                    }
+                    else
+                    {
+
+                        table_output += '<td>'+sheet_data[row][cell]+'</td>';
+						thisEntry[fields[cell]] = sheet_data[row][cell];
+
+                    }
+
+                }
+
+                table_output += '</tr>';
+				
+				if (row > 0) entries[row-1] = thisEntry;
+
+            }
+
+            table_output += '</table>';
+			
+			NumRows = entries.length;
+
+			CtrlSum = (parseFloat(SeqAmnt) * NumRows).toFixed(2);
+
+			var result =  'Procesadas ' + NumRows + ' entradas; CtrlSum: ' + CtrlSum + '<br>Desde el ID ' + entries[0].EndToEndId + ' hasta el ' + entries[entries.length-1].EndToEndId;
+
+            document.getElementById('excel_data').innerHTML = '<div class="alert alert-info">' + result + '</div><br>'+table_output;
+
+        }
+
+        excel_file.value = '';
+
+    }
+
+});
+
+document.getElementById("btn").addEventListener("click", function () {
+	
+    document.getElementById('excel_data').innerHTML = '';
+
+    if(RemesaID.length==0)
+    {
+        document.getElementById('excel_data').innerHTML = '<div class="alert alert-danger">Introduce un nombre para la remesa</div>';
+
+        excel_file.value = '';
+
+        return false;
+    }
+
+    if(SeqDate.length==0)
+    {
+        document.getElementById('excel_data').innerHTML = '<div class="alert alert-danger">Establece la fecha de cargo para la remesa</div>';
+
+        excel_file.value = '';
+
+        return false;
+    }
+
+    if(SeqTp.length==0)
+    {
+        document.getElementById('excel_data').innerHTML = '<div class="alert alert-danger">Selecciona el tipo de remesa</div>';
+
+        excel_file.value = '';
+
+        return false;
+    }
+
+    if(NumRows==0)
+    {
+        document.getElementById('excel_data').innerHTML = '<div class="alert alert-danger">Selecciona un fichero excel para procesar</div>';
+
+        excel_file.value = '';
+
+        return false;
+    }
+	
+	content = header;
+	
+	content = content.replace("{MessageId}", MessageID); 
+	content = content.replace("{CreationDate}", CreationDate);
+	content = content.replace("{PmtInfId}", PmtInfId);
+	content = content.replace("{SeqTp}", SeqTp);
+	content = content.replace("{SeqDate}", SeqDate.substr(6,4) + "-" + SeqDate.substr(3,2) + "-" + SeqDate.substr(0,2));
+	content = content.replace("{PmtInfId}", PmtInfId);
+	content = content.replace(/{InitgPtyNm}/g, InitgPtyNm); 
+	content = content.replace(/{InitgPtyId}/g, InitgPtyId); 
+	content = content.replace("{CdtrAcct}", CdtrAcct);
+	content = content.replace("{CdtrAgtBIC}", CdtrAgtBIC);
+
+	var thisEntry = {};
+	
+	for(var i = 0; i < entries.length; i++)
+	{
+		content = content.concat(row);
+		
+		thisEntry = entries[i];
+				
+		const f = fields.entries();
+
+		for (let x of f) 
+		{
+			var regexstring = "{"+x[1]+"}";
+			var regexp = new RegExp(regexstring, "gi");
+			content = content.replace(regexp, thisEntry[x[1]]); 
+		}	
+		
+	}
+	
+	content = content.replace(/{SeqConcept}/g, SeqConcept); 
+	content = content.replace(/{Ammount}/g, SeqAmnt); 
+	content = content.replace(/{CtrlSum}/g, CtrlSum); 
+	content = content.replace(/{NumRows}/g, NumRows); 
+
+	content = content.concat(footer);
+	
+    var element = document.createElement('a');
+	
+    element.setAttribute('href','data:text/plain;charset=utf-8,' + encodeURIComponent(content));
+    
+	element.setAttribute('download', RemesaID + ".xml");
+    
+	document.body.appendChild(element);
+    
+	element.click();
+    
+	document.body.removeChild(element);
+
+}, false);
+
+$(document).ready(function(){
+
+	var date_input=$('input[id="fechaCargo"]'); //our date input has the name "date"
+
+	var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+
+	date_input.datepicker({
+
+		format: 'dd-mm-yyyy',
+		
+	    weekStart: 1,
+		
+	    language: "es",
+
+		container: container,
+
+		todayHighlight: true,
+
+		autoclose: true,
+		
+		useCurrent: false
+
+	})
+	    
+    //detect change
+    date_input.on("change.datetimepicker", function (e) {
+	
+        if (this.value !== SeqDate) {
+    
+			SeqDate = this.value;
+			
+			PmtInfId = InitgPtyId.substr(7,9) + SeqDate.substr(6,4) + SeqDate.substr(3,2) + SeqDate.substr(0,2) + nowString.substring(0,14) + Math.round((Math.random() * 9999)).toString(10).padStart(4,"0");
+			
+        }
+    })
+
+let InitgPtyId = "ES66000G79687984";
+
+	document.getElementById("concepto").value = SeqConcept ; 
+
+	document.getElementById("cuota").value = SeqAmnt ; 
+
+	$(document).on('click', 'input[name="tipoCargo"]', function() {
+
+		SeqTp = $(this).val();
+
+	});
+})
+				  
+</script></body></html>
