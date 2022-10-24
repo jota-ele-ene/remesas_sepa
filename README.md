@@ -31,3 +31,16 @@ Hipotesis
 
 6.- Si se quieren añadir más variables (por ejemplo la cantidad de cada recibo) basta con añadir una columna más con el nombre de la variable a sustituir
 
+## License
+
+This repo is licensed under the **MIT** license.
+
+## Author
+
+José Luis Núñez [https://joseluisnuñez.es](https://joseluisnuñez.es)
+
+if you find this repo useful, enjoy it and please consider buying me a coffee ☕️.
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/U7U27W8VV)
+
+Thanks! ❤️
