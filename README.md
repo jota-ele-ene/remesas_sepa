@@ -35,6 +35,8 @@ Hipotesis
 
 This repo is licensed under the **MIT** license.
 
+Thanks to the authors of [SheetJS](https://sheetjs.com/), a JS library to read, edit, and export spreadsheets, used for developing this code.
+
 ## Author
 
 José Luis Núñez [https://joseluisnuñez.es](https://joseluisnuñez.es)
