@@ -1,4 +1,4 @@
-# remesas_sepa
+# REMESAS SEPA EN FORMATO ISO 20022
 Utilidad para crear un fichero XML con las Órdenes en formato ISO 20022 para emisión de adeudos directos SEPA en euros (Esquema básico). Para más detalles, consultar la [guia de implantación definida por AEB, CECA y UNACC](https://github.com/jota-ele-ene/remesas_sepa/raw/main/GuiaSEPA.pdf). 
 
 Como funciona
