@@ -27,7 +27,7 @@ Hipotesis
 
 4.- Sólo se contemplan como secuencia del adeudo primer adeudo (_FRST_) o adeudo recurrente (_RCUR_). Tampoco se implementan modificaciones en los mandatos. 
 
-5.- Para cada recibo se sobreescriben las variables entre llaves por el valor de la celda de cada fila en la columna con el mismo nombre que la variable. El fichero xlsx incluido en el repositorio es un ejemplo.
+5.- Para cada recibo se sobreescriben las variables entre llaves por el valor de la celda de cada fila en la columna con el mismo nombre que la variable. El fichero xlsx incluido en el repositorio es un ejemplo. Como simplificación, se utiliza como identificador del mandato (_MndtId_) el mismo que para el Deudor (_DBTR>Id_)
 
 6.- Si se quieren añadir más variables (por ejemplo la cantidad de cada recibo) basta con añadir una columna más con el nombre de la variable a sustituir
 
