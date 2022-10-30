@@ -4,45 +4,36 @@ Utilidad para crear un fichero XML con las Órdenes en formato ISO 20022 para em
 Como funciona
 -------------
 
-1.- Descarga el ZIP con el repositorio y descomprimelo
+1.- Selecciona el fichero Excel con la información necesaria para tu remesa (datos del emisor, datos de la remesa, adeudos, etc.). Puedes descargarte el fichero de ejemplo desde [este enlace](https://github.com/jota-ele-ene/remesas_sepa/raw/main/files/remesas.xlsx). *EL FICHERO NUNCA SUBE A NINGÚN SERVIDOR. LA INFORMACIÓN SE PROCESA EXCLUSIVAMENTE EN EL NAVEGADOR DE TU EQUIPO*.
 
-2.- Edita el _fichero config.js_ y configura los datos del EMISOR (Nombre, ID suministrado por el banco, IBAN y BIC)
+2.- Revisa la información procesada al seleccionar el fichero. Además de los mensajes que aparezcan en la página, se marcarán en amarillo los campos leidos con errores.
 
-3.- Ves al directorio del repositorio descomprimos
+3.- Si es necesario modifica le fichero Excel y repite los pasos 1 y 2 hasta que no tengas errores o sean esperables. 
 
-4.- Carga la página html en tu navegador
-
-5.- Rellena el formulario, carga un fichero excel con una fila para cada recibo
-
-6.- Descarg atu remesa en el formato XML SEPA valido para mandar a tu banco
+4.- Una vez que todos los datos sean correcto, descarga tu remesa en el formato XML SEPA valido para mandar a tu banco
 
 Hipotesis
 ---------
 
-1.- En el fichero _template.js_ existen variables con las cabeceras del fichero XML de remesas y la plantilla para cada recibo.
+Por defecto, la página funciona con una plantilla muy simple que funciona para adeudos a particulares (tipo CORE) y personalizando sólo los campos básicos que permiten procesar la remesa. Si pulsas en el icono "i" de la esquina superior derecha de la página, obtendrás inforamción detallada del funcionamiento y podrás descargarte la plantilla utilizada. Comprobarás que aparece un único adeudo. Las variables que luego son susituidas por los valores del fichero Excel aparecen entre llaves. Por ejemplo {SeqTp}.
 
-2.- Al ejecutarse, se rellenan en la cabecera las variables entre llaves (e.g. _{InitgPtyNm}_ con el contenido de la variable del mismo nombre en el fichero _config.js_.
+Si necesitas ampliar la plantilla o hacer congigurables otros parámetros, puedes usar tu propia plantilla en la sección "_Configuración avanzada_". Las variables que añadas en la plantilla entre llaves tendrás que incluirlas luego en el fichero Excel. 
 
-3.- Las veriables declaradas en template.js se sobreescriben con los scripts incluidos en la página HTML. Campos del fichero como _MsgId_, _CreDtTm_ o _PmtInfId_ se autocalculan. Revisar si las reglas implementadas en los scripts de la página HTML para construir esos campos se ajustan a tus necesidades. Se supone que todos los recibos son iguales y también se autocalculan el número de transacciones y el importe total de la remesa (campos _NbOfTxs_ y _CtrlSum_). 
-
-4.- Sólo se contemplan como secuencia del adeudo primer adeudo (_FRST_) o adeudo recurrente (_RCUR_). Tampoco se implementan modificaciones en los mandatos. 
-
-5.- Para cada recibo se sobreescriben las variables entre llaves por el valor de la celda de cada fila en la columna con el mismo nombre que la variable. El fichero xlsx incluido en el repositorio es un ejemplo. Como simplificación, se utiliza como identificador del mandato (_MndtId_) el mismo que para el Deudor (_DBTR>Id_)
-
-6.- Si se quieren añadir más variables (por ejemplo la cantidad de cada recibo) basta con añadir una columna más con el nombre de la variable a sustituir
-
-## License
+## Licencia
 
 This repo is licensed under the **MIT** license.
 
-Thanks to the authors of [SheetJS](https://sheetjs.com/), a JS library to read, edit, and export spreadsheets, used for developing this code.
+Esta página incluye además código previo de otros proyectos accesibles en Internet, por lo que quiero agradecer a:
+* Los autores de [SheetJS](https://sheetjs.com/), una libreria Javascript para leer y procesar ficheros Excel
+* [Nick Braver](https://www.nickbraver.com), autor del componente [Pure CSS Classy Footer](https://codepen.io/nickbraver/pen/DGeMWQ)
+* [Amit Kamble](https://github.com/amyth91), autor del proyecto [Beautiful Aurora Footer Lights](https://codepen.io/amyth91/pen/DzYGaK)
 
-## Author
+## Autor
 
 José Luis Núñez [https://joseluisnuñez.es](https://joseluisnuñez.es)
 
-if you find this repo useful, enjoy it and please consider buying me a coffee ☕️.
+Si te es de alguna utilidad, me alegro y me dejo invitar a un café ☕️.
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/U7U27W8VV)
 
-Thanks! ❤️
+¡Gracias! ❤️
