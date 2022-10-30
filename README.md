@@ -1,10 +1,10 @@
 # REMESAS SEPA EN FORMATO ISO 20022
-Utilidad para crear un fichero XML con las Órdenes en formato ISO 20022 para emisión de adeudos directos SEPA en euros (Esquema básico). Para más detalles, consultar la [guia de implantación definida por AEB, CECA y UNACC](https://github.com/jota-ele-ene/remesas_sepa/raw/main/GuiaSEPA.pdf). 
+Utilidad para crear un fichero XML con las Órdenes en formato ISO 20022 para emisión de adeudos directos SEPA en euros (Esquema básico). Para más detalles, consultar la [guia de implantación definida por AEB, CECA y UNACC](https://github.com/jota-ele-ene/remesas_sepa/raw/main/files/GuiaSEPA.pdf). 
 
 Como funciona
 -------------
 
-1. Selecciona el fichero Excel con la información necesaria para tu remesa (datos del emisor, datos de la remesa, adeudos, etc.). Puedes descargarte el fichero de ejemplo desde [este enlace](https://github.com/jota-ele-ene/remesas_sepa/raw/main/files/remesas.xlsx). *EL FICHERO NUNCA SUBE A NINGÚN SERVIDOR. LA INFORMACIÓN SE PROCESA EXCLUSIVAMENTE EN EL NAVEGADOR DE TU EQUIPO*.
+1. Selecciona el fichero Excel con la información necesaria para tu remesa (datos del emisor, datos de la remesa, adeudos, etc.). Puedes descargarte el fichero de ejemplo desde [este enlace](https://github.com/jota-ele-ene/remesas_sepa/raw/main/files/remesas.xlsx). **EL FICHERO NUNCA SUBE A NINGÚN SERVIDOR. LA INFORMACIÓN SE PROCESA EXCLUSIVAMENTE EN EL NAVEGADOR DE TU EQUIPO**.
 
 2. Revisa la información procesada al seleccionar el fichero. Además de los mensajes que aparezcan en la página, se marcarán en amarillo los campos leidos con errores.
 
