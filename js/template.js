@@ -2,23 +2,15 @@ let now = new Date();
 
 let nowString = now.getFullYear()+(now.getMonth()+1).toString(10).padStart(2,"0")+now.getDate().toString(10).padStart(2,"0")+now.getHours().toString(10).padStart(2,"0")+now.getMinutes().toString(10).padStart(2,"0")+now.getSeconds().toString(10).padStart(2,"0")+now.getMilliseconds().toString(10).padStart(3,"0")+"00";
 
-let RemesaID = "";
-
-let MessageID = "";
-
 let CreationDate = now.getFullYear()+"-"+now.getMonth().toString(10).padStart(2,"0")+"-"+now.getDate().toString(10).padStart(2,"0")+"T"+now.getHours().toString(10).padStart(2,"0")+":"+now.getMinutes().toString(10).padStart(2,"0")+":"+now.getSeconds().toString(10).padStart(2,"0");
 
-let NumRows = 10;
+let NumRows = 0;
 
 let CtrlSum = 0;
 
-let PmtInfId = "";
-
-let SeqTp = "";
-
-let SeqDate = "";
-
 let entries = [];
+
+let params = [];
 
 let fields = [];
 
@@ -28,7 +20,7 @@ let row = `      <DrctDbtTxInf>
         <PmtId>
           <EndToEndId>{EndToEndId}</EndToEndId>
         </PmtId>
-        <InstdAmt Ccy="EUR">{Ammount}</InstdAmt>
+        <InstdAmt Ccy="EUR">{InstdAmt}</InstdAmt>
         <DrctDbtTx>
           <MndtRltdInf>
             <MndtId>{NIF}</MndtId>
@@ -56,7 +48,7 @@ let row = `      <DrctDbtTxInf>
           </Id>
         </DbtrAcct>
         <RmtInf>
-          <Ustrd>{SeqConcept}</Ustrd>
+          <Ustrd>{RmtInf}</Ustrd>
         </RmtInf>
       </DrctDbtTxInf>
 `
@@ -125,8 +117,8 @@ let header = `<?xml version="1.0" encoding="UTF-8"?>
           </PrvtId>
         </Id>
       </CdtrSchmeId>
-`
-
-let footer = `    </PmtInf>
+{DrctDbtTxInf}    </PmtInf>
   </CstmrDrctDbtInitn>
 </Document>`
+
+

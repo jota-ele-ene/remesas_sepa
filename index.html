@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<!-- saved from url=(0053)http://demo.webslesson.info/excel-to-html-javascript/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+	<title>REMESAS SEPA EN FORMATO ISO 20022</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="css/flip.css">
+    <link rel="stylesheet" href="css/aurora.css">
+    <link rel="stylesheet" href="css/footer.css">
+
+    <script type="text/javascript" src="js/template.js"></script>
+    <script type="text/javascript" src="js/validate.js"></script>
+	
+	<!-- Include SheetJS Library -->
+    <script type="text/javascript" src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+
+	<!-- Include jQuery -->
+	<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+	<style>
+
+	.panel-action {
+	  position:fixed;
+	  top:0;
+	  right:0;
+	  margin:1em;
+	  display:none;
+	}
+	
+	.panel-action img {
+	  height:30px;
+	}
+
+	.active-action {
+	  display:block;
+	}	
+	
+	// Div desplegable de configuración avanzada
+	.collapsible {
+	  cursor: pointer;
+	  padding: 18px;
+	  width: 100%;
+	  border: none;
+	  text-align: left;
+	  outline: none;
+	  font-size: 15px;
+	}
+
+	.content {
+	  padding: 1em;
+	  display: none;
+	  overflow: hidden;
+	  background-color: #f1f1f1;
+	}
+	
+	<!-- Flip Ayuda -->
+	.scene {
+	  width: 200px;
+	  height: 260px;
+	  border: 1px solid #CCC;
+	  margin: 40px 0;
+	  perspective: 600px;
+	}
+
+	.block {
+	  width: 100%;
+	  height: 100%;
+	  transition: transform 1s;
+	  transform-style: preserve-3d;
+	  cursor: pointer;
+	  position: relative;
+	}
+
+	.block.is-flipped {
+	  transform: rotateY(180deg);
+	}
+
+	.block__face {
+	  -webkit-backface-visibility: hidden;
+	  backface-visibility: hidden;
+	  height:0;
+	}
+
+	.block__face--back {
+	  transform: rotateY(180deg);
+	}
+
+	</style>	
+</head>
+<body>
+
+	<div id="info" class="active-action panel-action"><img src="files/info.png"></div>
+	<div id="close" class="panel-action"><img src="files/close.png"></div>
+
+	
+    <div class="container">
+
+		<div class="row">
+			<h2 class="text-center mt-4 mb-4">REMESAS SEPA EN FORMATO ISO 20022</h2>
+			<p>Utilidad para crear un fichero XML con las Órdenes en formato ISO 20022 para emisión de adeudos directos SEPA en euros (Esquema básico). Para más detalles, consultar la <a href="files/GuiaSEPA.pdf">guia de implantación definida por AEB, CECA y UNACC</a>.</p>
+        </div>
+
+		<div class="scene scene--block">
+		  <div class="block">
+			<div class="block__face block__face--front">
+				<div class="row">
+					<div class="col">
+						<div class="card">
+							<div class="card-header"><b>Selecciona excel con los datos</b></div>
+							<div class="card-body">
+								
+								<input type="file" id="excel_file">
+
+							</div>
+						</div>
+						<p><a href="files/remesas.xlsx">Descarga Excel Ejemplo</a> | <a id="collapsible" href="#">Configuración avanzada</a>
+						<div class="content" id="avzconf">
+							<p>Por defecto utilizamos una plantilla básica para generar el fichero XML de la remesa. Si quieres revisar la estructura, puedes descargartelo en <a id="template" href="#">este enlace</a>. Aparece un único adeudo. Las variables que luego son susituidas por los valores del fichero Excel aparecen entre llaves. Por ejemplo <i>SeqTp</i>. Si quieres usar tu propio teamplate, modifícalo y súbelo con el siguiente selector de fichero.</p>
+							<input type="file" id="template_file">
+						</div>
+					</div>
+					<div class="col">
+						<div class="card">
+							<div class="card-header"><b>Descarga XML con la remesa</b></div>
+							<div class="card-body">
+								
+								<input type="button" id="btn" value="Download" />
+
+							</div>
+						</div>
+					</div>
+				</div>    
+				
+				<div class="row">
+
+					</p><div id="excel_data" class="mt-5"></div>
+
+				</div>
+			
+			</div>
+			
+			<div class="block__face block__face--back">
+			
+				<p>Por defecto, la página funciona con una plantilla muy simple que funciona para adeudos a particulares (tipo CORE) y personalizando sólo los campos básicos que permiten procesar la remesa. La plantilla puedes consultarla en <a id="template" href="#">este enlace</a>. Aparece un único adeudo. Las variables que luego son susituidas por los valores del fichero Excel aparecen entre llaves. Por ejemplo <i>{SeqTp}</i>. </p>
+				
+				<p>En el fichero excel esperamos que las variables estén especificadas en dos hojas. En la primera, con el nombre <i>"Información de pago"</i> estarán una fila cabecera con los nombres de la variable y una segunda fila con sus valores, cada valor alineado en la columna de su variable.</p>
+				
+				<p>En la segunda hoja del excel, con el nombre <i>"Adeudos"</i>, esperamos la misma estructura. En la primera fila como cabecera los nombres de las variables. En este caso, cada nueva fila se corresponderá con un adeudo. Incluye tantas filas como recibos vayas a emitir. Cada columna tendra los valores de la variable que se define en la cabecera (fila 1).</p>
+				
+				<p>Puedes descargarte un fichero de ejemplo desde <a href="files/remesas.xlsx">este enlace</a>. Si deseas añadir más variables, para que sean procesadas e incluidas en el fichero, debes utilizar tu propia plantilla donde incluyas variables con los mismos nombres que definas en el excel. Sube tu plantilla en la sección de confiiguración avanada de la página principal.</p>
+
+				<p>A continuación, te explicamos los campos y variables que esperamos recibir en el fichero excel para rellenar la plantilla y otros campos a los que para simplificar el proceso les asignamos un valor predefinido.</p>
+
+				<table class="table table-striped table-bordered" style="margin-top: 2em;">
+				
+					<tbody>
+												
+						<tr><td><b>RemesaID: Identificador de remesa</b></td><td>Es un campo alfanumérico de 13 caracteres. Realmente no es una variable que se traslade de manera directa a uno de las del fichero XML de la remesa. Se utiliza para construir la etiqueta <b>&lt;MsgId&gt;</b>. <br>Si no se incluye en el fichero excel se construye truncando a 13 caracteres el nombre del fichero excel sin la extensión.</td></tr>
+						
+						<tr><td><b>MessageID: Identificación del mensaje</b></td><td>Referencia única de la remesa para el banco que se incluye en la etiqueta <b>&lt;MsgId&gt;</b> del fichero XML. Como es único lo componemos de forma determinada en base al parámetro que pases en la variable <b>&lt;MsgId&gt;</b> y la fecha actual de la siguiente manera: <br>
+						<ul>
+						  <li>Caracteres 0-3: Cadena predefinida "PRE"</li>
+						  <li>Caracteres 4-20 : Fecha actual en formato AAAAMMDDHHmmssSSS</li>
+						  <li>Caracteres 21-22 : "00"</li>
+						  <li>Caracteres 23-34 : Identificador de la remesa (<i>RemesaID</i>) en mayúsculas y relleno con "0"'s por la izquierda</li>
+						</ul> </td></tr>
+
+						<tr><td><b>CreationDate: Fecha de creación</b></td><td>Es el valor de la etiqueta <b>&lt;CreDtTm&gt;</b>del fichero XML. <br>Contiene la fecha actual en formato AAAA-MM-DDTHH:mm:ss.</td></tr>
+
+						<tr><td><b>NumRows: Número de adeudos</b></td><td>Es el valor de la etiqueta <b>&lt;NbOfTxs&gt;</b>del fichero XML. <br>Se calcula al procesar la hoja "Adeudos" del fichero excel.</td></tr>
+
+						<tr><td><b>CtrlSum: Control de suma</b></td><td>Es el valor de la etiqueta <b>&lt;CtrlSum&gt;</b>del fichero XML. <br>Contiene el importe total de todos los recibos incluidos en la remesa y se calcula al procesar la hoja "Adeudos" del fichero Excel.
+
+						<tr><td><b>InitgPtyNm: Nombre del emisor</b></td><td>Es un campo alfanumérico de hasta 70 caracteres. Realmente se rellena la etiqueta <b>&lt;Nm&gt;</b> del fichero XML dentro de la estructura completa de <b>&lt;InitgPtyNm&gt;</b>. Como parte del grupo, la etiqueta <b>&lt;SchmeNm&gt;</b> esta fija en la plantilla con el valor "CORE". <br>Es el nombre del emisor que aparecerá en los recibos de la remesa.</td></tr>
+
+						<tr><td><b>InitgPtyId: Id del emisor</b></td><td>Es un campo alfanumérico estructurado. Realmente se rellena la etiqueta <b>&lt;Id&gt;</b>del fichero XML dentro de la estructura completa de <b>InitgPtyNm&gt;Id&gt;OrgId&gt;Othr&gt;Id</b>. <br>Contiene el ID del emisor que ha proporcionado la entidad bancaria, con este formato:
+						<ul>
+						  <li>Caracteres 0-2: Código de pais. En el caso de España "ES"</li>
+						  <li>Caracteres 3-4: Código de control. 2 números</li>
+						  <li>Caracteres 5-7: Sufijo, normalmente "00"</li>
+						  <li>Caracteres 7-15: CIF del emisor</li>
+						</ul> </td></tr>
+
+						<tr><td><b>PmtInfId: Identificación de la información del pago</b></td><td>Referencia única de la remesa para el banco que se incluye en la etiqueta <b>&lt;PmtInfId&gt;</b> del fichero XML. Como es único lo componemos de forma determinada en base al parámetro que pases en la variable <b>&lt;MsgId&gt;</b> y la fecha actual de la siguiente manera: <br>
+						<ul>
+						  <li>Caracteres 0-8: CIF del emisor</li>
+						  <li>Caracteres 4-16 : Fecha de cargo en formato AAAAMMDD. Se lee del parámetro <i>ReqdColltnDt</i> incluido en el excel</li>
+						  <li>Caracteres 18-30 : Fecha actual en formato AAAAMMDDHHmmss</li>
+						  <li>Caracteres 31-34 : Número aleatorio de 4 dígitos</li>
+						</ul> </td></tr>
+
+						<tr><td><b>SeqTp: Secuencia del adeudo</b></td><td>Rellena la etiqueta del mismo nombre (<b>&lt;SeqTp&gt;</b>) directamente con el valor del parámetro con el mismo nombre incluido en el excel. Sólo puede tomar los valores "RCUR", "FRST", "OOFF" y "FNAL", según la especificación del formato de fichero.</td></tr>
+
+						<tr><td><b>SeqDate: Fecha de cargo</b></td><td>Rellena la etiqueta (<b>&lt;ReqdColltnDt&gt;</b>) del fichero XML directamente con el valor del parámetro con el mismo nombre incluido en el excel. Se espera la una fecha en formato "AAAA-MM-DD". Si no se incluye en el fichero excel se calcula sumando 5 días a la fecha actual. </td></tr>
+
+						<tr><td><b>CdtrAcct: Cuenta de abono del emisor</b></td><td>Rellena la etiqueta (<b>&lt;IBAN&gt;</b>) del fichero XML dentro de la estructura completa de <b>&lt;CdtrAcct&gt;</b>. Se espera un IBAN válido correspondiente a la cuenta del emisor donde se abonará el importe de los recibos de la remesa. </td></tr>
+
+						<tr><td><b>CdtrAgtBIC: BIC correspondiente a la cuenta de abono del emisor</b></td><td>Rellena la etiqueta (<b>&lt;BIC&gt;</b>) del fichero XML dentro de la estructura completa de <b>&lt;CdtrAgt&gt;</b>. Se espera un BIC válido correspondiente a la cuenta del emisor donde se abonará el importe de los recibos de la remesa. </td></tr>
+
+						<tr><td><b>CdtrAgtBIC: BIC correspondiente a la cuenta de abono del emisor</b></td><td>Rellena la etiqueta (<b>&lt;BIC&gt;</b>) del fichero XML dentro de la estructura completa de <b>&lt;CdtrAgt&gt;</b>. Se espera un BIC válido correspondiente a la cuenta del emisor donde se abonará el importe de los recibos de la remesa. </td></tr>
+
+						<tr><td><b>EndToEndId: Identificador extremo a extremo</b></td><td>Rellena la etiqueta (<b>&lt;EndToEndId&gt;</b>) del fichero XML. Se espera una cadena alfanumérica de hasta 35 caracteres y debe identificar univocamente a cada recibo dentro de la remesa. Este identificador lo verá el deudor entre los detalles del recibo. No se hacen comprobaciones de formato adicionales ni se chequea que en verdad sea único en la remesa. </td></tr>
+
+						<tr><td><b>InstdAmt: Importe del recibo</b></td><td>Rellena la etiqueta del mismo nombre (<b>&lt;InstdAmt&gt;</b>) del fichero XML. Se espera una número con el importe en euros con dos decimales. En el fichero excel puede aparecer bien en la hoja "Adeudos", especificando un valor que puede ser diferente para cada recibo, bien en la hoja "-Información del pago", en cuyo caso se rellenará para con la misma cantidad para cada adeudo. </td></tr>
+
+						<tr><td><b>NIF: NIF del deudor</b></td><td>Rellena en el fichero XML tanto la etiqueta (<b>&lt;MndtId&gt;</b>) dentro de la estructura completa de <b>&lt;DrctDbtTx&gt;</b>, como la etiqueta (<b>&lt;Id&gt;</b>) dentro de la estructura completa <b>&lt;Dbtr&gt;</b>. Se espera un NIF válido correspondiente al deudor de cada recibo. Se toma por simplicidad como el identificador único tanto del propio deudor como del mandato SEPA que autoriza al emisor a cargar en la cuenta del deudor el recibo. </td></tr>
+
+						<tr><td><b>DtOfSgntr: Ficha de firma del mandato SEPA</b></td><td>Rellena la etiqueta del mismo nombre del fichero XML dentro de la estructura completa de <b>&lt;DrctDbtTx&gt;</b>. Se espera una fecha válida en formato AAA-MM-DD. </td></tr>
+
+						<tr><td><b>BIC: BIC de la cuenta de cargo del recibo</b></td><td>Rellena la etiqueta del mismo nombre del fichero XML dentro de la estructura completa de <b>&lt;DbtrAgt&gt;</b>. Se espera un BIC válido correspondiente a la cuenta del deudor donde se cargará el importe de cada recibo. </td></tr>
+
+						<tr><td><b>Name: Nombre del titular de la cuenta de cargo del recibo</b></td><td>Rellena la etiqueta <b>&lt;Nm&gt;</b> del fichero XML dentro de la estructura completa de <b>&lt;Dbtr&gt;</b>. Se espera una cadena alfanumérica de hasta 140 caracteres. </td></tr>
+
+						<tr><td><b>IBAN: IBAN de la cuenta de cargo del recibo</b></td><td>Rellena la etiqueta (<b>&lt;IBAN&gt;</b>) del fichero XML dentro de la estructura completa de <b>&lt;DbtrAcct&gt;</b>. Se espera un IBAN válido correspondiente a la cuenta del deudor donde se cargará el importe del recibo. </td></tr>
+
+						<tr><td><b>RmtInf: Concepto del recibo</b></td><td>Rellena la etiqueta del mismo nombre (<b>&lt;Ustrd&gt;</b>) del fichero XML dentro de la estructura completa de <b>&lt;RmtInf&gt;</b>. Se espera una cadena alfanumérica de hasta 140 caracteres.. En el fichero excel puede aparecer bien en la hoja "Adeudos", especificando un valor que puede ser diferente para cada recibo, bien en la hoja "Información del pago", en cuyo caso se rellenará el mismo concepto para cada adeudo. </td></tr>
+
+					</tbody>
+					
+				</table>
+							
+			</div>
+		  
+		  </div>
+
+			</div>
+			
+		</div>
+
+    </div>
+	
+    </div>
+	
+	
+
+	
+	<script type="text/javascript" src="js/main.js"></script>
+
+
+	<article id="wrap"><article id="lightings">
+    	<section id="one"><section id="two"><section id="three"><section id="four"><section id="five">
+		</section></section></section></section></section>
+    </article></article>
+
+	<div class="footer">
+		<div id="ftbutton"></div>
+		<div id="ftcontainer">
+			<div id="ftcont">
+				<div class="footer_center">
+					<div class="footer_left">El contenido de este sitio está autorizado bajo la <a href="files/LICENSE.txt">licencia MIT</a>.<br>Visita el <a href="https://github.com/jota-ele-ene/remesas_sepa">repositorio del código en Github</a>.<br>Si te es de alguna utilidad, me alegro y me dejo invitar a un café. </div>
+					<div class="footer_right" style="text-align: right;"><a href="https://ko-fi.com/U7U27W8VV"><img src="https://ko-fi.com/img/githubbutton_sm.svg" alt="ko-fi"style="width: 40%;margin: 0.3em 0;"></a><br>¡Gracias! ❤️</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<script type="text/javascript">
+	
+	document.getElementById("ftbutton").innerHTML = "&copy; " + nowString.substring(0,4);
+	
+	</script>
+	
+</body></html>

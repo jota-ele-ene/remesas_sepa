@@ -1,0 +1,117 @@
+// Display a cross with CSS only.
+//
+// $size  : px or em
+// $color : color
+// $thickness : px
+@mixin cross($size: 20px, $color: currentColor, $thickness: 1px) {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  position: relative;
+  width: $size;
+  height: $size;
+
+  &:before,
+  &:after {
+    content: '';
+    position: absolute;
+    top: ($size - $thickness) / 2;
+    left: 0;
+    right: 0;
+    height: $thickness;
+    background: $color;
+    border-radius: $thickness;
+  }
+
+  &:before {
+    transform: rotate(45deg);
+  }
+
+  &:after {
+    transform: rotate(-45deg);
+  }
+
+  span {
+    display: block;
+  }
+
+}
+
+
+.btn-close, .btn-help {
+  position: fixed;
+  top: 0;
+  right: 0;
+  margin: 1em;
+  border: 0;
+  padding: 0;
+  background: black;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: none;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  //transition: all 150ms;
+  
+  .icon-cross {
+    @include cross(30px, #fff, 6px);   
+  }
+
+  .icon-question {
+    font-size: 2.5em; 
+    font-weight: bolder;
+    color: white;
+  }
+  
+  &:hover,
+  &:focus {
+    //transform: rotateZ(360deg);
+    background: #888;
+  }
+
+}
+
+// Example 2.
+.cross-stand-alone {
+  @include cross(30px, #000, 3px);  
+}
+
+
+// Example 3.
+.cross-1px {
+  @include cross(80px, #000);  
+}
+
+
+// Demo styles.
+
+body {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-around;
+  align-items: center;
+  align-content: flex-start;
+  height: 100vh;
+}
+
+
+// For screen readers.
+.visually-hidden {
+  position: absolute !important;
+  clip: rect(1px, 1px, 1px, 1px);
+  padding: 0 !important;
+  border: 0 !important;
+  height: 1px !important;
+  width: 1px !important;
+  overflow: hidden;
+}
+
+.action 
+{
+  display:flex;
+}
+
