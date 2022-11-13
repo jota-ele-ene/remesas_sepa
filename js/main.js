@@ -50,7 +50,7 @@ excel_file.addEventListener('change', (event) => {
         var table_params_keys = '<tr>';
         var table_params_values = '<tr>';
 
-       if(sheet_config.length > 0)
+		if(sheet_config.length > 0)
         {
 			
             for(var cell = 0; cell < sheet_config[0].length; cell++)
@@ -74,20 +74,16 @@ excel_file.addEventListener('change', (event) => {
         table_params_keys += '</tr>';
         table_params_values += '</tr>';
 
-		// Si ha habido algún error no seguimos procesando los adeudos 
+		// Si ha habido algún error sacamos un mensaje de warning para revisar
 		
-		if (  table_params_values.indexOf("background-color: yellow") == -1 ) 
+		if (  table_params_values.indexOf("background-color: yellow") > -1 ) 
 		{
 		
-			excel_file.value = '';
-
-			return false;
+		    document.getElementById('excel_data').innerHTML = '<div class="alert alert-warning">Revisa los valores de la hoja "Información del pago" en el fichero .xlsx</div>';
 		
 		}
-		else 
-		{	
-			document.getElementById('excel_data').innerHTML = '<table class="table table-striped table-bordered">'+table_params_keys+table_params_values+'</table>';
- 		}
+
+		document.getElementById('excel_data').innerHTML += '<table class="table table-striped table-bordered">'+table_params_keys+table_params_values+'</table>';
 		
 		var sheet_data = XLSX.utils.sheet_to_json(work_book.Sheets["Adeudos"], {header:1});
 

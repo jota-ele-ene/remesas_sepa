@@ -55,7 +55,6 @@ function  validateAmmount(remesa) {
 
 	if (isNaN(decimal))
     {
-        document.getElementById('excel_data').innerHTML = '<div class="alert alert-danger">La cuota (parámetro <i>InstdAmt</i>) debe ser un importe en euros con dos decimales</div>';
 
         return false;
     }
@@ -74,21 +73,18 @@ function  validateAlfanumerico(field,value,length,space) {
 
 	if (value.lenght == 0 || value.length > length)
     {
-        document.getElementById('excel_data').innerHTML = '<div class="alert alert-danger">La variable <i>' + field + '</i> debe tener entre 1 y ' + length +' caracteres</div>';
 
         return false;
     }
 
 	if (pattern.test(value))
     {
-        document.getElementById('excel_data').innerHTML = '<div class="alert alert-danger">La variable <i>' + field + '</i> sólo puede tener números y letras</div>';
 
         return false;
     }
 	
     if ( !space && /[ ]/ig.test(value) ) 
     {
-        document.getElementById('excel_data').innerHTML = '<div class="alert alert-danger">La variable <i>' + field + '</i> no puede tener espacios</div>';
 
         return false;
     }
