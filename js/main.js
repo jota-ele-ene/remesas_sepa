@@ -297,7 +297,7 @@ document.getElementById("btn").addEventListener("click", function () {
 	
 	for(var i = 0; i < entries.length; i++)
 	{
-		content = content.replace("{DrctDbtTxInf}", row);
+		content = content.replace("{DrctDbtTxInf}", row + "{DrctDbtTxInf}");
 		
 		thisEntry = entries[i];
 				
@@ -311,12 +311,14 @@ document.getElementById("btn").addEventListener("click", function () {
 		}	
 		
 	}
-		
+
+    content = content.replace("{DrctDbtTxInf}", "");
+	
     var element = document.createElement('a');
 	
     element.setAttribute('href','data:text/plain;charset=utf-8,' + encodeURIComponent(content));
     
-	element.setAttribute('download', params["RemesaID"] + ".xml");
+	element.setAttribute('download', params["RemesaID"] + "_" + NumRows + ".xml");
     
 	document.body.appendChild(element);
     
