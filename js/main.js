@@ -15,8 +15,10 @@ excel_file.addEventListener('change', (event) => {
     }
 
     var reader = new FileReader();
+
+    var file_to_read = event.target.files[0];
 	
-    reader.readAsArrayBuffer(event.target.files[0]);
+    reader.readAsArrayBuffer(file_to_read);
 
     reader.onload = function(event){
 
@@ -194,7 +196,7 @@ excel_file.addEventListener('change', (event) => {
 
 		if(!params["RemesaID"])
 		{
-			let filename = excel_file.substring(excel_file.lastIndexOf("\\")+1,excel_file.lastIndexOf("."));
+			let filename = file_to_read.name.substring(file_to_read.name.lastIndexOf("\\")+1,file_to_read.name.lastIndexOf("."));
 			let root = filename.replace(/[^0-9a-z]/gi, '');
 			params["RemesaID"] = root.substring(0, Math.min(length,root.length));
 		}
