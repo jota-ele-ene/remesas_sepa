@@ -197,7 +197,7 @@ excel_file.addEventListener('change', (event) => {
 		if(!params["RemesaID"])
 		{
 			let filename = file_to_read.name.substring(file_to_read.name.lastIndexOf("\\")+1,file_to_read.name.lastIndexOf("."));
-			let root = filename.replace(/[^0-9a-z]/gi, '');
+			let root = filename.toUpperCase().replace(/[^0-9a-z]/gi, '');
 			params["RemesaID"] = root.substring(0, Math.min(length,root.length));
 		}
 	
