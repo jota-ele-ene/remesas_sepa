@@ -137,7 +137,7 @@ excel_file.addEventListener('change', (event) => {
 				
 				if (!validRow) rowsInvalid.push('<a href="#'+row+'">'+thisEntry.EndToEndId+'</a>');
 								
-				if (!fields["InstdAmt"] && row > 0) 
+				if ( (fields.indexOf("InstdAmt")<0) && row > 0) 
 				{
 					if (params["InstdAmt"]) 
 					{
@@ -153,7 +153,8 @@ excel_file.addEventListener('change', (event) => {
 					}
 				}
 
-				if (!fields["RmtInf"] && row > 0) 
+
+				if ( (fields.indexOf("RmtInf")<0) && row > 0) 
 				{
 					if (params["RmtInf"]) thisEntry["RmtInf"] = params["RmtInf"];
 					else 
